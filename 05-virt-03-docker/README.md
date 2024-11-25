@@ -21,7 +21,6 @@ Hey, Netology
 - Предоставьте ответ в виде ссылки на https://hub.docker.com/<username_repo>/custom-nginx/general .
 
 ## [ответ](https://hub.docker.com/r/rbudarin/custom-nginx)
----
 
 ## <a id="title1">Задача 2</a>
 1. Запустите ваш образ custom-nginx:1.0.0 командой docker run в соответвии с требованиями:
@@ -34,4 +33,4 @@ Hey, Netology
 В качестве ответа приложите скриншоты консоли, где видно все введенные команды и их вывод.
 
 ## Ответ
-
+![screen2](https://github.com/rbudarin/devops_netology/blob/main/05-virt-03-docker/screen2.png)
