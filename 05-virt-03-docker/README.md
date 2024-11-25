@@ -34,3 +34,155 @@ Hey, Netology
 
 ## Ответ
 ![screen2](https://github.com/rbudarin/devops_netology/blob/main/05-virt-03-docker/screen2.png)
+
+## <a id="title1">Задача 3</a>
+1. Воспользуйтесь docker help или google, чтобы узнать как подключиться к стандартному потоку ввода/вывода/ошибок контейнера "custom-nginx-t2".
+2. Подключитесь к контейнеру и нажмите комбинацию Ctrl-C.
+3. Выполните docker ps -a и объясните своими словами почему контейнер остановился.
+4. Перезапустите контейнер
+5. Зайдите в интерактивный терминал контейнера "custom-nginx-t2" с оболочкой bash.
+6. Установите любимый текстовый редактор(vim, nano итд) с помощью apt-get.
+7. Отредактируйте файл "/etc/nginx/conf.d/default.conf", заменив порт "listen 80" на "listen 81".
+8. Запомните(!) и выполните команду nginx -s reload, а затем внутри контейнера curl http://127.0.0.1:80 ; curl http://127.0.0.1:81.
+9. Выйдите из контейнера, набрав в консоли exit или Ctrl-D.
+10. Проверьте вывод команд: ss -tlpn | grep 127.0.0.1:8080 , docker port custom-nginx-t2, curl http://127.0.0.1:8080. Кратко объясните суть возникшей проблемы.
+11. - Это дополнительное, необязательное задание. Попробуйте самостоятельно исправить конфигурацию контейнера, используя доступные источники в интернете. Не изменяйте конфигурацию nginx и не удаляйте контейнер. Останавливать контейнер можно. пример источника
+12. Удалите запущенный контейнер "custom-nginx-t2", не останавливая его.(воспользуйтесь --help или google)
+В качестве ответа приложите скриншоты консоли, где видно все введенные команды и их вывод.
+
+## Ответ 
+```
+Первое задание
+https://hub.docker.com/repository/docker/rbudarin/custom-nginx/general
+
+Третье задание
+user@system:~$ docker ps
+CONTAINER ID   IMAGE                         COMMAND                  CREATED         STATUS         PORTS                                     NAMES
+ca46e647c66e   rbudarin/custom-nginx:1.0.0   "/docker-entrypoint.…"   6 minutes ago   Up 6 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   roman-budarin-custom-nginx-t2
+user@system:~$ docker exec -it roman-budarin-custom-nginx-t2 bash
+root@ca46e647c66e:/app# apt install vim -y
+root@ca46e647c66e:/app# nano /etc/nginx/conf.d/default.conf
+root@ca46e647c66e:/app# nginx -s reload
+2024/11/23 20:57:14 [notice] 1256#1256: signal process started
+
+root@ca46e647c66e:/app# curl http://127.0.0.1:80 ; curl http://127.0.0.1:81
+curl: (7) Failed to connect to 127.0.0.1 port 80: Connection refused
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I will be DevOps Engineer!</h1>
+</body>
+
+user@system:~$ ss -tlpn 
+State                    Recv-Q                   Send-Q                                      Local Address:Port                                       Peer Address:Port                   Process                   
+LISTEN                   0                        128                                             127.0.0.1:631                                             0.0.0.0:*                                                
+LISTEN                   0                        4096                                              0.0.0.0:8080                                            0.0.0.0:*                                                
+LISTEN                   0                        4096                                                 [::]:8080                                               [::]:*                                                
+LISTEN                   0                        128                                                 [::1]:631                                                [::]:*                               
+
+user@system:~$ docker port roman-budarin-custom-nginx-t2
+80/tcp -> 0.0.0.0:8080
+80/tcp -> [::]:8080
+
+user@system:~$ curl http://127.0.0.1:8080
+curl: (56) Recv failure: Connection reset by peer
+
+user@system:~$ docker inspect --format="{{.Id}}"  roman-budarin-custom-nginx-t2
+ca46e647c66eede07214a9ad2261c53273e3b8aaddddcb4703b3ec60f1a31e54
+
+
+user@system:~$ docker ps -a 
+CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS         PORTS                                     NAMES
+ca46e647c66e   rbudarin/custom-nginx:1.0.0   "/docker-entrypoint.…"   28 minutes ago   Up 4 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   roman-budarin-custom-nginx-t2
+user@system:~$ docker stop ca46e647c66e
+ca46e647c66e
+
+user@system:~$ sudo systemctl stop docker.socket
+
+user@system:~$ sudo vim /var/lib/docker/containers/ca46e647c66eede07214a9ad2261c53273e3b8aaddddcb4703b3ec60f1a31e54/config.v2.json
+user@system:~$ sudo vim /var/lib/docker/containers/ca46e647c66eede07214a9ad2261c53273e3b8aaddddcb4703b3ec60f1a31e54/hostconfig.json
+
+user@system:~$ sudo systemctl start docker.service
+
+user@system:~$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+user@system:~$ docker ps -a
+CONTAINER ID   IMAGE                         COMMAND                  CREATED          STATUS                     PORTS     NAMES
+ca46e647c66e   rbudarin/custom-nginx:1.0.0   "/docker-entrypoint.…"   36 minutes ago   Exited (0) 8 minutes ago             roman-budarin-custom-nginx-t2
+user@system:~$ docker start ca46e647c66e
+ca46e647c66e
+user@system:~$ curl http://localhost:8080
+<html>
+<head>
+Hey, Netology
+</head>
+<body>
+<h1>I will be DevOps Engineer!</h1>
+</body>
+</html>
+user@system:~$ docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+```
+
+## <a id="title1">Задача 4</a>
+- Запустите первый контейнер из образа centos c любым тегом в фоновом режиме, подключив папку текущий рабочий каталог $(pwd) на хостовой машине в /data контейнера, используя ключ -v.
+- Запустите второй контейнер из образа debian в фоновом режиме, подключив текущий рабочий каталог $(pwd) в /data - контейнера.
+Подключитесь к первому контейнеру с помощью docker exec и создайте текстовый файл любого содержания в /data.
+- Добавьте ещё один файл в текущий каталог $(pwd) на хостовой машине.
+- Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера.
+В качестве ответа приложите скриншоты консоли, где видно все введенные команды и их вывод.
+
+## ответ 
+![screen4](https://github.com/rbudarin/devops_netology/blob/main/05-virt-03-docker/screen4.png)
+
+## <a id="title1">Задача 5</a>
+1. Создайте отдельную директорию(например /tmp/netology/docker/task5) и 2 файла внутри него. "compose.yaml" с содержимым:
+```
+version: "3"
+services:
+  portainer:
+    network_mode: host
+    image: portainer/portainer-ce:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+```
+"docker-compose.yaml" с содержимым:
+```
+version: "3"
+services:
+  registry:
+    image: registry:2
+
+    ports:
+    - "5000:5000"
+```
+И выполните команду "docker compose up -d". Какой из файлов был запущен и почему? (подсказка: [https://docs.docker.com/compose/compose-application-model/#the-compose-file](https://docs.docker.com/compose/compose-application-model/#the-compose-file)
+
+2. Отредактируйте файл compose.yaml так, чтобы были запущенны оба файла. (подсказка: [https://docs.docker.com/compose/compose-file/14-include/](https://docs.docker.com/compose/compose-file/14-include/)
+
+3. Выполните в консоли вашей хостовой ОС необходимые команды чтобы залить образ custom-nginx как custom-nginx:latest в запущенное вами, локальное registry. Дополнительная документация: [https://distribution.github.io/distribution/about/deploying/](https://distribution.github.io/distribution/about/deploying/)
+
+4. Откройте страницу "https://127.0.0.1:9000" и произведите начальную настройку portainer.(логин и пароль адмнистратора)
+
+5. Откройте страницу "http://127.0.0.1:9000/#!/home", выберите ваше local окружение. Перейдите на вкладку "stacks" и в "web editor" задеплойте следующий компоуз:
+```
+version: '3'
+
+services:
+  nginx:
+    image: 127.0.0.1:5000/custom-nginx
+    ports:
+      - "9090:80"
+```
+6. Перейдите на страницу "http://127.0.0.1:9000/#!/2/docker/containers", выберите контейнер с nginx и нажмите на кнопку "inspect". В представлении <> Tree разверните поле "Config" и сделайте скриншот от поля "AppArmorProfile" до "Driver".
+
+7. Удалите любой из манифестов компоуза(например compose.yaml). Выполните команду "docker compose up -d". Прочитайте warning, объясните суть предупреждения и выполните предложенное действие. Погасите compose-проект ОДНОЙ(обязательно!!) командой.
+
+## ответ 
+![screen5](https://github.com/rbudarin/devops_netology/blob/main/05-virt-03-docker/screen5.png)
+![screen6](https://github.com/rbudarin/devops_netology/blob/main/05-virt-03-docker/screen6.png)
+![screen7](https://github.com/rbudarin/devops_netology/blob/main/05-virt-03-docker/screen7.png)
+
+
+
