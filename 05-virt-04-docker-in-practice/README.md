@@ -88,7 +88,9 @@ See 'snap info docker' for additional versions.
 6. В качестве ответа повторите  sql-запрос и приложите скриншот с данного сервера, bash-скрипт и ссылку на fork-репозиторий.
 
 ## Ответ
+
 ## [bash-скрипт](https://github.com/rbudarin/shvirtd-example-python/blob/main/bash-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82)
+
 ## sql-запросы
 ![docker4](https://github.com/rbudarin/devops_netology/blob/main/05-virt-04-docker-in-practice/docker4.png)
 ## remote ssh context
