@@ -42,8 +42,8 @@ See 'snap info docker' for additional versions.
 !!! В процессе последующего выполнения ДЗ НЕ изменяйте содержимое файлов в fork-репозитории! Ваша задача ДОБАВИТЬ 5 файлов: ```Dockerfile.python```, ```compose.yaml```, ```.gitignore```, ```.dockerignore```,```bash-скрипт```. Если вам понадобилось внести иные изменения в проект - вы что-то делаете неверно!
 
 ## Ответ
-1. https://github.com/rbudarin/shvirtd-example-python
-2. https://github.com/rbudarin/shvirtd-example-python/blob/main/Dockerfile.python
+### 1. [shvirtd-example-python](https://github.com/rbudarin/shvirtd-example-python)
+### 2. [Dockerfile.python](https://github.com/rbudarin/shvirtd-example-python/blob/main/Dockerfile.python)
 ---
 
 ## Задача 2 (*)
