@@ -44,7 +44,8 @@ See 'snap info docker' for additional versions.
 ## Ответ
 ### 1. [shvirtd-example-python](https://github.com/rbudarin/shvirtd-example-python)
 ### 2. [Dockerfile.python](https://github.com/rbudarin/shvirtd-example-python/blob/main/Dockerfile.python)
-### 3. ![docker5.1.3](https://github.com/rbudarin/devops_netology/blob/main/05-virt-04-docker-in-practice/docker5.1.3.png)
+### 3. Web-приложение без использования docker в venv
+![docker5.1.3](https://github.com/rbudarin/devops_netology/blob/main/05-virt-04-docker-in-practice/docker5.1.3.png)
 ---
 
 ## Задача 2 (*)
